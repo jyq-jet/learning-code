@@ -18,8 +18,8 @@ public class UserDao {
     public User login(User loginUser){
 
         try {
-//            String sql = "select * from user wehre username = ? and password = ?";
-            String sql = "SELECT * FROM user  WHERE username = ? AND password = ?";
+            String sql = "select * from user where username = ? and password = ?";
+//            String sql = "SELECT * FROM user  WHERE username = ? AND password = ?";
             User user = template.queryForObject(sql,
                     new BeanPropertyRowMapper<User>(User.class),
                     loginUser.getUsername(),loginUser.getPassword());
