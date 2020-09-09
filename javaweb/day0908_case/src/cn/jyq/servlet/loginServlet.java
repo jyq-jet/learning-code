@@ -26,6 +26,16 @@ public class loginServlet extends HttpServlet {
         String verifyCode = request.getParameter("verifycode");
         Map<String, String[]> map = request.getParameterMap();
 
+        //暂时测试
+        System.out.println("在登录页面获取到的map如下");
+        for (String key:map.keySet()) {
+            System.out.print(key + ": ");
+            for (String value : map.get(key)) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+
         //验证码校验
         HttpSession session = request.getSession();
         String checkcode_server = (String) session.getAttribute("CHECKCODE_SERVER");
