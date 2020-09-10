@@ -1,5 +1,6 @@
 package cn.jyq.sevice;
 
+import cn.jyq.domain.PageBean;
 import cn.jyq.domain.User;
 
 import java.util.List;
@@ -45,4 +46,18 @@ public interface UserService {
      * @param user
      */
     public void updateUser(User user);
+
+    /**
+     * 根据用户id批量删除用户
+     * @param ids
+     */
+    public void deleteSelected(String[] ids);
+
+    /**
+     * 分页查询用户
+     * @param currentPage
+     * @param rows
+     * @return
+     */
+    public PageBean<User> findUserByPage(String currentPage, String rows);
 }

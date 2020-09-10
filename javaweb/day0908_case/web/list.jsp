@@ -35,6 +35,39 @@
                 location.href = "${pageContext.servletContext.contextPath}/deleteServlet?id=" + id
             }
         }
+
+        //删除选中功能
+
+        window.onload = function() {
+            document.getElementById("delSelected").onclick = function () {
+                if(confirm("您确定要删除所选条目吗？")){
+                    var flag = false;
+
+                    var cbs = document.getElementsByName("uid");
+                    //判断是否有条目被选中
+                    for(var i = 0; i < cbs.length; i++){
+                        if(cbs[i].checked){
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        document.getElementById("form").submit();
+                    }
+                    // document.getElementById("form").submit();
+
+                }
+
+            }
+
+            //设置全选功能
+            document.getElementById("firstCb").onclick = function () {
+                var cbs = document.getElementsByName("uid");
+                for(var i = 0; i < cbs.length; i++){
+                    cbs[i].checked = this.checked;
+                }
+            };
+        }
     </script>
 </head>
 <body>
@@ -59,60 +92,76 @@
     </div>
     <div style="float: right; margin: 5px" >
         <a class="btn btn-primary" href="add.jsp">添加联系人</a>
-        <a class="btn btn-primary" href="">删除联系人</a>
+        <a class="btn btn-primary" href="javascript:void(0)" id="delSelected">删除选中</a>
     </div>
-    <table border="1" class="table table-bordered table-hover">
-        <tr class="success">
-            <th><input type="checkbox"></th>
-            <th>编号</th>
-            <th>姓名</th>
-            <th>性别</th>
-            <th>年龄</th>
-            <th>籍贯</th>
-            <th>QQ</th>
-            <th>邮箱</th>
-            <th>操作</th>
-        </tr>
-
-        <c:forEach items="${users}" var="user" varStatus="s">
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>${s.count}</td>
-                <td>${user.name}</td>
-                <td>${user.gender}</td>
-                <td>${user.age}</td>
-                <td>${user.address}</td>
-                <td>${user.qq}</td>
-                <td>${user.email}</td>
-                <td><a class="btn btn-default btn-sm" href="${pageContext.servletContext.contextPath}/findUserServlet?id=${user.id}">修改</a>
-                    <a class="btn btn-default btn-sm" href="javascript:deleteUser(${user.id});">删除</a>
-                </td>
+    <form id="form" action="${pageContext.servletContext.contextPath}/delSelectedServlet" method="post">
+        <table border="1" class="table table-bordered table-hover">
+            <tr class="success">
+                <th><input type="checkbox" id="firstCb"></th>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>籍贯</th>
+                <th>QQ</th>
+                <th>邮箱</th>
+                <th>操作</th>
             </tr>
 
-        </c:forEach>
+            <c:forEach items="${pb.list}" var="user" varStatus="s">
+                <tr>
+                    <td><input type="checkbox" id="Cb" name="uid" value="${user.id}"></td>
+                    <td>${s.count}</td>
+                    <td>${user.name}</td>
+                    <td>${user.gender}</td>
+                    <td>${user.age}</td>
+                    <td>${user.address}</td>
+                    <td>${user.qq}</td>
+                    <td>${user.email}</td>
+                    <td><a class="btn btn-default btn-sm" href="${pageContext.servletContext.contextPath}/findUserServlet?id=${user.id}">修改</a>
+                        <a class="btn btn-default btn-sm" href="javascript:deleteUser(${user.id});">删除</a>
+                    </td>
+                </tr>
+
+            </c:forEach>
 
 
 
-    </table>
+        </table>
+    </form>
+
     <div>
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
+                <c:if test="${pb.currentPage == 1}">
+                    <li class="disabled">
+                </c:if>
+                <c:if test="${pb.currentPage != 1}">
+                    <li>
+                </c:if>
+                    <a href="${pageContext.servletContext.contextPath}/findUserByPageServlet?currentPage=${pb.currentPage - 1}&rows=5" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li>
-                    <a href="#" aria-label="Next">
+                <c:forEach begin="1" end="${pb.totalPage}" var="i">
+                    <c:if test="${pb.currentPage == i}">
+                        <li class="active"><a href="${pageContext.servletContext.contextPath}/findUserByPageServlet?currentPage=${i}&rows=5">${i}</a></li>
+                    </c:if>
+                    <c:if test="${pb.currentPage != i}">
+                        <li><a href="${pageContext.servletContext.contextPath}/findUserByPageServlet?currentPage=${i}&rows=5">${i}</a></li>
+                    </c:if>
+                </c:forEach>
+                <c:if test="${pb.currentPage == pb.totalPage}">
+                    <li class="disabled">
+                </c:if>
+                <c:if test="${pb.currentPage != pb.totalPage}">
+                    <li>
+                </c:if>
+                    <a href="${pageContext.servletContext.contextPath}/findUserByPageServlet?currentPage=${pb.currentPage + 1}&rows=5" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
-                <span style="font-size: 25px;margin-left: 5px">共16条记录，共4页</span>
+                <span style="font-size: 25px;margin-left: 5px">共${pb.totalCount}条记录，共${pb.totalPage}页</span>
             </ul>
         </nav>
     </div>
