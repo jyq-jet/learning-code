@@ -3,6 +3,7 @@ package cn.jyq.dao;
 import cn.jyq.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户操作的Dao
@@ -23,14 +24,16 @@ public interface UserDao {
     /**
      * 查询总记录数
      * @return
+     * @param condition
      */
-    public int findTotalCount();
+    public int findTotalCount(Map<String, String[]> condition);
 
     /**
      * 查询每页的记录
      * @param start
      * @param rows
+     * @param condition
      * @return
      */
-    public List<User> findByPage(int start, int rows);
+    public List<User> findByPage(int start, int rows, Map<String, String[]> condition);
 }

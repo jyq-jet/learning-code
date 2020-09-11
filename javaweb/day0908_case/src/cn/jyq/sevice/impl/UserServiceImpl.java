@@ -7,6 +7,7 @@ import cn.jyq.domain.User;
 import cn.jyq.sevice.UserService;
 
 import java.util.List;
+import java.util.Map;
 
 public class UserServiceImpl implements UserService {
     private UserDao userDao = new UserDaoImpl();
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageBean<User> findUserByPage(String _currentPage, String _rows) {
+    public PageBean<User> findUserByPage(String _currentPage, String _rows, Map<String, String[]> condition) {
         int currentPage = Integer.parseInt(_currentPage);
         int rows = Integer.parseInt(_rows);
         PageBean<User> pb = new PageBean<User>();
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
 
         //先查询总记录数
-        int totalCount = userDao.findTotalCount();
+        int totalCount = userDao.findTotalCount(condition);
 
         //计算currentPage的边界，也就是总页数
         int totalPage = (totalCount % rows) == 0 ? totalCount / rows : (totalCount / rows) + 1;
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
         int start = (currentPage - 1) * rows;
 
 
-        List<User> list = userDao.findByPage(start, rows);
+        List<User> list = userDao.findByPage(start, rows, condition);
 
         //设置参数
         pb.setTotalCount(totalCount);

@@ -36,7 +36,7 @@ public class UpdateUserServlet extends HttpServlet {
         service.updateUser(user);
 
         //跳转到查询所有用户的servlet
-        response.sendRedirect(request.getContextPath()+"/userListServlet");
+        response.sendRedirect(request.getContextPath()+"/findUserByPageServlet");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
